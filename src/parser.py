@@ -1,12 +1,12 @@
 from rply import ParserGenerator
-from ast import *
+from src.mer_ast import *
 
 class Parser():
     def __init__(self):
         self.pg = ParserGenerator(
             ['INTEGER', 'PRINT', 'STRING',
              'FLOAT', 'ADD', 'SUB', 'DIV',
-             'MUL', 'LPAREN', 'RPAREN'
+             'MUL', '(', ')'
             ],
             precedence=[
                 ('left', ['ADD', 'SUB']),
@@ -15,7 +15,7 @@ class Parser():
         )
 
     def build(self):
-        @self.pg.production('program : PRINT LPAREN expression RPAREN')
+        @self.pg.production('function : PRINT ( expression )')
         def exp_print(p):
             return Yaz(p[2])
 
@@ -31,7 +31,7 @@ class Parser():
         def exp_string(p):
             return String(p[0])
         
-        @self.pg.production('expression : LPAREN expression RPAREN')
+        @self.pg.production('expression : ( expression )')
         def exp_parens(p):
             return p[1]
 
@@ -53,7 +53,6 @@ class Parser():
                 return Div(left, right)
             else:
                 raise AssertionError("Something went super wrong.")
-
 
         return self.pg.build()
 
