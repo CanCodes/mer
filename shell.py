@@ -10,7 +10,5 @@ from src.parser import Parser;
 
 lexer = Lexer().build()
 parser = Parser().build()
-tokens = lexer.lex("2+2")
-a = parser.parse(tokens).eval()
-
-print(a)
+tokens = lexer.lex("yaz(2+2)")
+parser.parse(tokens).eval()

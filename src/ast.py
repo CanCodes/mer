@@ -16,7 +16,7 @@ class Float():
 
 class String():
     def __init__(self, value):
-        self.value = value.getstr
+        self.value = value.getstr()
 
     def eval(self):
         return str(self.value)
