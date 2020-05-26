@@ -1,6 +1,6 @@
 class Integer():
     def __init__(self, value):
-        self.value = value
+        self.value = value.getstr()
 
     def eval(self):
         return int(self.value)
@@ -8,7 +8,7 @@ class Integer():
 
 class Float():
     def __init__(self, value):
-        self.value = value
+        self.value = value.getstr()
 
     def eval(self):
         return float(self.value)
@@ -16,7 +16,7 @@ class Float():
 
 class String():
     def __init__(self, value):
-        self.value = value
+        self.value = value.getstr
 
     def eval(self):
         return str(self.value)
