@@ -1,3 +1,12 @@
+class Boolean():
+    def __init__(self, value):
+        self.value = value.getstr()
+    def eval(self):
+        if(self.value == "doğru"):
+            return True
+        elif(self.value == "yanlış"):
+            return False
+
 class Integer():
     def __init__(self, value):
         self.value = value.getstr()
@@ -23,38 +32,35 @@ class String():
 
 
 class BinOp():
-    def __init__(self, left, right):
+    def __init__(self, left, binop, right):
         self.left = left
+        self.binop = binop
         self.right = right
-
-
-class Sum(BinOp):
     def eval(self):
-        return self.left.eval() + self.right.eval()
+        if self.binop == "ADD":
+            return self.left.eval() + self.right.eval()
+        elif self.binop == "SUB":
+            return self.left.eval() - self.right.eval()
+        elif self.binop == "MUL":
+            return self.left.eval() * self.right.eval()
+        elif self.binop == "DIV":
+            return self.left.eval() / self.right.eval()
+        elif self.binop == "MOD":
+            return self.left.eval() % self.right.eval()
+        else:
+            raise AssertionError("Something went super wrong.")
 
-
-class Sub(BinOp):
-    def eval(self):
-        return self.left.eval() - self.right.eval()
-
-
-class Mul(BinOp):
-    def eval(self):
-        return self.left.eval() * self.right.eval()
-
-
-class Div(BinOp):
-    def eval(self):
-        return self.left.eval() / self.right.eval()
-
-class Mod(BinOp):
-    def eval(self):
-        return self.left.eval() % self.right.eval()
-
-class Yaz():
+class Print():
     def __init__(self, value):
         self.value = value
 
     def eval(self):
         print(self.value.eval())
 
+class Loop():
+    def __init__(self, time, function):
+        self.time = time
+        self.function = function
+    def eval(self):
+        for x in range(self.time.eval()):
+            self.function.eval()

@@ -9,14 +9,16 @@ class Lexer:
         self.lg.ignore(r"//.*")
 
         self.lg.add("PRINT", r"yazdır")
+        self.lg.add("LOOP", r"tekrar")
+
         self.lg.add("ASSIGN", r"=")
         self.lg.add("ASSIGN_INC", r"\+=")
         self.lg.add("ASSIGN_DEC", r"\-=")
 
         self.lg.add("STRING", r"'.*'")
-        self.lg.add("FLOAT",  r"[-]?\d+(\.\d+)")
-        self.lg.add("INTEGER", r"[-]?\d+")
-
+        self.lg.add("FLOAT",  r"\d+(\.\d+)") #r"[-]?\d+(\.\d+)"
+        self.lg.add("INTEGER", r"\d+") # [-]?\d+
+        self.lg.add("BOOLEAN", r"(doğru|yanlış)")
         self.lg.add("ADD", r"\+")
         self.lg.add("SUB", r"-")
         self.lg.add("MUL", r"\*")
@@ -28,7 +30,9 @@ class Lexer:
 
         self.lg.add("[", r"\[")
         self.lg.add("]", r"\]")
-        self.lg.add("COMMA", r",")
+        self.lg.add("{", r"\{")
+        self.lg.add("}", r"\}")
+        self.lg.add(",", r",")
 
         self.lg.add("IDENTIFIER", r"[_\w]*[_\w0-9]+")
 

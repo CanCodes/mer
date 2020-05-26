@@ -1,1 +1,3 @@
-yazdır('Hello')
+tekrar(5,
+    yazdır(2/1+3)
+    )
