@@ -16,7 +16,7 @@ class Lexer:
 
         self.lg.add("STRING", r"'.*'")
         self.lg.add("FLOAT",  r"\d+(\.\d+)")
-        self.lg.add("NUMBER", r"\d+")
+        self.lg.add("INTEGER", r"\d+")
 
         self.lg.add("ADD", r"\+")
         self.lg.add("SUB", r"-")
