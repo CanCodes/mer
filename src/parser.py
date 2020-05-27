@@ -7,13 +7,15 @@ class Parser():
             ['INTEGER', 'PRINT', 'STRING',
              'FLOAT', 'ADD', 'SUB', 'DIV',
              'MUL', '(', ')', 'LOOP', ',',
-             'BOOLEAN'
+             'BOOLEAN', 'IDENTIFIER', '='
             ],
             precedence=[
+                ('left', ['INTEGER', 'FLOAT']),
                 ('left', ['ADD', 'SUB']),
                 ('left', ['MUL', 'DIV'])
             ]
         )
+        self.variables = []
 
     def build(self):
         @self.pg.production('function : PRINT ( expression )')
@@ -40,6 +42,14 @@ class Parser():
         def exp_parens(p):
             return p[1]
 
+        @self.pg.production('declaration : IDENTIFIER = expression')
+        def variable(p):
+            return Variable(p[0], p[1])
+
+        @self.pg.production('expression : IDENTIFIER')
+        def call(p):
+            return Call(p[0])
+
         @self.pg.production('expression : expression SUB expression')
         @self.pg.production('expression : expression ADD expression')
         @self.pg.production('expression : expression MUL expression')
@@ -50,11 +60,12 @@ class Parser():
             binop = p[1].gettokentype()
             return BinOp(left, binop, right)
 
-
-
-        @self.pg.production('function : LOOP ( expression , function )')
+        @self.pg.production('function : LOOP ( INTEGER , function )')
         def loop(p):
-            return Loop(p[2], p[4])
-
+            return Loop(Integer(p[2]), p[4])
+        @self.pg.error
+        def error_handler(token):
+            raise ValueError(f"Ran into a {token} where it wasn't expected")
         return self.pg.build()
+
 

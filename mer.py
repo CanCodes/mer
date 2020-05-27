@@ -1,5 +1,5 @@
-from src.lexer import Lexer;
-from src.parser import Parser;
+from src.lexer import Lexer
+from src.parser import Parser
 import sys
 
 lexer = Lexer().build()
