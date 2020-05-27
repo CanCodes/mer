@@ -1,21 +1,28 @@
 from rply import ParserGenerator
-from src.ast import *
+from src.mer_ast import *
 
 class Parser():
     def __init__(self):
         self.pg = ParserGenerator(
-            ['NUMBER', 'PRINT', 'STRING',
+            ['INTEGER', 'PRINT', 'STRING',
              'FLOAT', 'ADD', 'SUB', 'DIV',
-             'MOD', 'MUL', 'LPAREN', 'RPAREN'
+             'MUL', '(', ')', 'LOOP', ',',
+             'BOOLEAN', 'IDENTIFIER', '='
             ],
             precedence=[
+                ('left', ['INTEGER', 'FLOAT']),
                 ('left', ['ADD', 'SUB']),
                 ('left', ['MUL', 'DIV'])
             ]
         )
+        self.variables = []
 
     def build(self):
-        @self.pg.production('expression : NUMBER')
+        @self.pg.production('function : PRINT ( expression )')
+        def exp_print(p):
+            return Print(p[2])
+
+        @self.pg.production('expression : INTEGER')
         def exp_number(p):
             return Integer(p[0])
         
@@ -26,32 +33,39 @@ class Parser():
         @self.pg.production('expression : STRING')
         def exp_string(p):
             return String(p[0])
-        
-        @self.pg.production('expression : LPAREN expression RPAREN')
+
+        @self.pg.production('expression : BOOLEAN')
+        def exp_boolean(p):
+            return Boolean(p[0])
+
+        @self.pg.production('expression : ( expression )')
         def exp_parens(p):
             return p[1]
 
-        @self.pg.production('expression : expression ADD expression')
+        @self.pg.production('declaration : IDENTIFIER = expression')
+        def variable(p):
+            return Variable(p[0], p[1])
+
+        @self.pg.production('expression : IDENTIFIER')
+        def call(p):
+            return Call(p[0])
+
         @self.pg.production('expression : expression SUB expression')
+        @self.pg.production('expression : expression ADD expression')
         @self.pg.production('expression : expression MUL expression')
         @self.pg.production('expression : expression DIV expression')
         def expression(p):
             left = p[0]
             right = p[2]
             binop = p[1].gettokentype()
-            if binop == "ADD":
-                return Sum(left, right)
-            elif binop == "SUB":
-                return Sub(left, right)
-            elif binop == "MUL":
-                return Mul(left, right)
-            elif binop == "DIV":
-                return Div(left, right)
-            else:
-                raise AssertionError("Something went super wrong.")
-        @self.pg.production('program : PRINT LPAREN expression RPAREN')
-        def exp_print(p):
-            return Yaz(p[2])
+            return BinOp(left, binop, right)
 
+        @self.pg.production('function : LOOP ( INTEGER , function )')
+        def loop(p):
+            return Loop(Integer(p[2]), p[4])
+        @self.pg.error
+        def error_handler(token):
+            raise ValueError(f"Ran into a {token} where it wasn't expected")
         return self.pg.build()
+
 
