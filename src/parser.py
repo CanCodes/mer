@@ -1,13 +1,16 @@
 from rply import ParserGenerator
 from src.mer_ast import *
 
-class Parser():
+
+class Parser:
+
     def __init__(self):
         self.pg = ParserGenerator(
             ['INTEGER', 'PRINT', 'STRING',
              'FLOAT', 'ADD', 'SUB', 'DIV',
              'MUL', '(', ')', 'LOOP', ',',
-             'BOOLEAN', 'IDENTIFIER', '='
+             'BOOLEAN', 'IDENTIFIER', '=',
+             '+=', '-='
             ],
             precedence=[
                 ('left', ['INTEGER', 'FLOAT']),
@@ -15,7 +18,6 @@ class Parser():
                 ('left', ['MUL', 'DIV'])
             ]
         )
-        self.variables = []
 
     def build(self):
         @self.pg.production("statements : statements statements")
@@ -27,13 +29,21 @@ class Parser():
         def exp_print(p):
             return Print(p[2])
 
-        @self.pg.production('statement : LOOP ( INTEGER , statements )')
+        @self.pg.production('statement : LOOP ( expression , statements )')
         def loop(p):
-            return Loop(Integer(p[2]), p[4])
+            return Loop(p[2], p[4])
 
         @self.pg.production('statement : IDENTIFIER = expression')
         def variable(p):
             return Assign(p[0], p[2])
+
+        @self.pg.production('statement : IDENTIFIER += expression')
+        def plus_equals(p):
+            return Assign(p[0], BinOp(Variable(p[0]), "ADD", p[2]))
+
+        @self.pg.production('statement : IDENTIFIER -= expression')
+        def plus_equals(p):
+            return Assign(p[0], BinOp(Variable(p[0]), "SUB", p[2]))
 
         @self.pg.production('expression : expression SUB expression')
         @self.pg.production('expression : expression ADD expression')
@@ -72,6 +82,7 @@ class Parser():
         @self.pg.error
         def error_handler(token):
             raise ValueError(f"Ran into a {token} where it wasn't expected")
+
         return self.pg.build()
 
 
