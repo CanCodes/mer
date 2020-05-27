@@ -1,4 +1,13 @@
-variables = []
+variables = {}
+
+
+class Statements:
+    def __init__(self, nodes):
+        self.nodes = nodes
+    
+    def eval(self):
+        for node in self.nodes:
+            node.eval()
 
 
 class Boolean():
@@ -75,21 +84,21 @@ class Loop():
             self.function.eval()
 
 
-class Variable():
+class Assign():
     def __init__(self, name, value):
         self.name = name
         self.value = value
 
     def eval(self):
-        variables[self.name] = self.value
+        variables[self.name.getstr()] = self.value.eval()
 
 
-class Call():
+class Variable():
     def __init__(self, name):
         self.name = name
 
     def eval(self):
-        if variables[self.name]:
-            return variables[self.name]
+        if variables[self.name.getstr()]:
+            return variables[self.name.getstr()]
         else:
             raise RuntimeError("Not Declared:", self.name)

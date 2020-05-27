@@ -18,9 +18,36 @@ class Parser():
         self.variables = []
 
     def build(self):
-        @self.pg.production('function : PRINT ( expression )')
+        @self.pg.production("statements : statements statements")
+        @self.pg.production("statements : statement")
+        def statements_all(p):
+            return Statements(p)
+
+        @self.pg.production('statement : PRINT ( expression )')
         def exp_print(p):
             return Print(p[2])
+
+        @self.pg.production('statement : LOOP ( INTEGER , statements )')
+        def loop(p):
+            return Loop(Integer(p[2]), p[4])
+
+        @self.pg.production('statement : IDENTIFIER = expression')
+        def variable(p):
+            return Assign(p[0], p[2])
+
+        @self.pg.production('expression : expression SUB expression')
+        @self.pg.production('expression : expression ADD expression')
+        @self.pg.production('expression : expression MUL expression')
+        @self.pg.production('expression : expression DIV expression')
+        def expression(p):
+            left = p[0]
+            right = p[2]
+            binop = p[1].gettokentype()
+            return BinOp(left, binop, right)
+
+        @self.pg.production('expression : ( expression )')
+        def exp_parens(p):
+            return p[1]
 
         @self.pg.production('expression : INTEGER')
         def exp_number(p):
@@ -38,31 +65,10 @@ class Parser():
         def exp_boolean(p):
             return Boolean(p[0])
 
-        @self.pg.production('expression : ( expression )')
-        def exp_parens(p):
-            return p[1]
-
-        @self.pg.production('declaration : IDENTIFIER = expression')
-        def variable(p):
-            return Variable(p[0], p[1])
-
         @self.pg.production('expression : IDENTIFIER')
         def call(p):
-            return Call(p[0])
-
-        @self.pg.production('expression : expression SUB expression')
-        @self.pg.production('expression : expression ADD expression')
-        @self.pg.production('expression : expression MUL expression')
-        @self.pg.production('expression : expression DIV expression')
-        def expression(p):
-            left = p[0]
-            right = p[2]
-            binop = p[1].gettokentype()
-            return BinOp(left, binop, right)
-
-        @self.pg.production('function : LOOP ( INTEGER , function )')
-        def loop(p):
-            return Loop(Integer(p[2]), p[4])
+            return Variable(p[0])
+        
         @self.pg.error
         def error_handler(token):
             raise ValueError(f"Ran into a {token} where it wasn't expected")
