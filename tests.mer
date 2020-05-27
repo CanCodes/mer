@@ -1,7 +1,14 @@
-a = 1
+a = 0
 
-tekrar(10, a += 1)
+tekrar(10) {
+    a+=1
+    yazdır(a)
+}
+// Output: 10
 
-yazdır(a+1)
+doğru ise {
+    yazdır('doğru')
+} değil {
+    yazdır('yanlış')
+}
 
-// Output: 12

@@ -11,6 +11,9 @@ class Lexer:
         self.lg.add("PRINT", r"yazdır")
         self.lg.add("LOOP", r"tekrar")
 
+        self.lg.add("IF", r"ise")
+        self.lg.add("ELSE", r"değil")
+
         self.lg.add("=", r"=")
         self.lg.add("+=", r"\+=")
         self.lg.add("-=", r"\-=")
