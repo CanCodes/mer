@@ -1,11 +1,25 @@
+variables = {}
+
+
+class Statements:
+    def __init__(self, nodes):
+        self.nodes = nodes
+    
+    def eval(self):
+        for node in self.nodes:
+            node.eval()
+
+
 class Boolean():
     def __init__(self, value):
         self.value = value.getstr()
+
     def eval(self):
-        if(self.value == "doğru"):
+        if (self.value == "doğru"):
             return True
-        elif(self.value == "yanlış"):
+        elif (self.value == "yanlış"):
             return False
+
 
 class Integer():
     def __init__(self, value):
@@ -36,6 +50,7 @@ class BinOp():
         self.left = left
         self.binop = binop
         self.right = right
+
     def eval(self):
         if self.binop == "ADD":
             return self.left.eval() + self.right.eval()
@@ -50,6 +65,7 @@ class BinOp():
         else:
             raise AssertionError("Something went super wrong.")
 
+
 class Print():
     def __init__(self, value):
         self.value = value
@@ -57,10 +73,32 @@ class Print():
     def eval(self):
         print(self.value.eval())
 
+
 class Loop():
     def __init__(self, time, function):
         self.time = time
         self.function = function
+
     def eval(self):
         for x in range(self.time.eval()):
             self.function.eval()
+
+
+class Assign():
+    def __init__(self, name, value):
+        self.name = name
+        self.value = value
+
+    def eval(self):
+        variables[self.name.getstr()] = self.value.eval()
+
+
+class Variable():
+    def __init__(self, name):
+        self.name = name
+
+    def eval(self):
+        if variables[self.name.getstr()]:
+            return variables[self.name.getstr()]
+        else:
+            raise RuntimeError("Not Declared:", self.name)

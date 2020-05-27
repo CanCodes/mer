@@ -11,9 +11,9 @@ class Lexer:
         self.lg.add("PRINT", r"yazdır")
         self.lg.add("LOOP", r"tekrar")
 
-        self.lg.add("ASSIGN", r"=")
-        self.lg.add("ASSIGN_INC", r"\+=")
-        self.lg.add("ASSIGN_DEC", r"\-=")
+        self.lg.add("=", r"=")
+        self.lg.add("+=", r"\+=")
+        self.lg.add("-=", r"\-=")
 
         self.lg.add("STRING", r"'.*'")
         self.lg.add("FLOAT",  r"\d+(\.\d+)") #r"[-]?\d+(\.\d+)"
