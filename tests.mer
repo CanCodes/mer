@@ -11,7 +11,3 @@ doğru ise {
 } değil {
     yazdır('yanlış')
 }
-
-b = oku('Selam adın nedir?')
-
-yazdır('Merhaba, ' + b)
