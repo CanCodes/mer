@@ -1,6 +1,7 @@
 from rply import ParserGenerator
+from rply.errors import ParserGeneratorWarning
 from src.mer_ast import *
-
+import warnings
 
 class Parser:
 
@@ -8,9 +9,10 @@ class Parser:
         self.pg = ParserGenerator(
             ['INTEGER', 'PRINT', 'STRING',
              'FLOAT', 'ADD', 'SUB', 'DIV',
-             'MUL', '(', ')', 'LOOP', ',',
-             'BOOLEAN', 'IDENTIFIER', '=',
-             '+=', '-='
+             'MUL', 'MOD', '(', ')', ',',
+             'LOOP', 'BOOLEAN', 'IDENTIFIER',
+             '=', '+=', '-=', '{', '}', 'IF',
+             'ELSE', 'READ'
             ],
             precedence=[
                 ('left', ['INTEGER', 'FLOAT']),
@@ -29,7 +31,11 @@ class Parser:
         def exp_print(p):
             return Print(p[2])
 
-        @self.pg.production('statement : LOOP ( expression , statements )')
+        @self.pg.production('expression : READ ( expression )')
+        def reading(p):
+            return Read(p[2])
+
+        @self.pg.production('statement : LOOP ( expression ) block')
         def loop(p):
             return Loop(p[2], p[4])
 
@@ -45,10 +51,27 @@ class Parser:
         def plus_equals(p):
             return Assign(p[0], BinOp(Variable(p[0]), "SUB", p[2]))
 
+        @self.pg.production('block : { statements }')
+        @self.pg.production('block : { }')
+        def closure_statements(p):
+            if len(p[1:-1]) == 0:
+                return Statements([])
+            else:
+                return p[1]
+
+        @self.pg.production('statement : expression IF block')
+        @self.pg.production('statement : expression IF block ELSE block')
+        def if_else(p):
+            if len(p) > 3:
+                return If(p[0], p[2], p[4])
+            else:
+                return If(p[0], p[2])
+
         @self.pg.production('expression : expression SUB expression')
         @self.pg.production('expression : expression ADD expression')
         @self.pg.production('expression : expression MUL expression')
         @self.pg.production('expression : expression DIV expression')
+        @self.pg.production('expression : expression MOD expression')
         def expression(p):
             left = p[0]
             right = p[2]
@@ -81,8 +104,10 @@ class Parser:
         
         @self.pg.error
         def error_handler(token):
-            raise ValueError(f"Ran into a {token} where it wasn't expected")
+            raise ValueError(f"Ran into a {token} where it was not expected")
 
+        # Build
+        warnings.filterwarnings("ignore", category=ParserGeneratorWarning)
         return self.pg.build()
 
 

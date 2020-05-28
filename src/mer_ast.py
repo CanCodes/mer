@@ -9,8 +9,7 @@ class Statements:
         for node in self.nodes:
             node.eval()
 
-
-class Boolean():
+class Boolean:
     def __init__(self, value):
         self.value = value.getstr()
 
@@ -21,7 +20,7 @@ class Boolean():
             return False
 
 
-class Integer():
+class Integer:
     def __init__(self, value):
         self.value = value.getstr()
 
@@ -29,7 +28,7 @@ class Integer():
         return int(self.value)
 
 
-class Float():
+class Float:
     def __init__(self, value):
         self.value = value.getstr()
 
@@ -37,15 +36,21 @@ class Float():
         return float(self.value)
 
 
-class String():
+class String:
     def __init__(self, value):
         self.value = value.getstr()
 
     def eval(self):
-        return str(self.value)
+        return str(self.value[1:-1])
+
+class Null:
+    def eval(self):
+        return self
+    def getstr(self):
+        return 'yok'
 
 
-class BinOp():
+class BinOp:
     def __init__(self, left, binop, right):
         self.left = left
         self.binop = binop
@@ -65,16 +70,41 @@ class BinOp():
         else:
             raise AssertionError("Something went super wrong.")
 
+class If:
+    def __init__(self, condition, body, else_body=None):
+        self.condition = condition
+        self.body = body
+        self.else_body = else_body
 
-class Print():
+    def eval(self):
+        if self.condition.eval():
+            return self.body.eval()
+        elif self.else_body is not None:
+            return self.else_body.eval()
+        return Null()
+
+
+class Print:
     def __init__(self, value):
         self.value = value
 
     def eval(self):
         print(self.value.eval())
 
+class Read:
+    def __init__(self, question):
+        self.question = question
 
-class Loop():
+    def eval(self):
+        value = input(self.question.eval())
+        if value.isnumeric():
+            if '.' not in value:
+                return Integer(value)
+            else:
+                return Float(value)
+        return value
+
+class Loop:
     def __init__(self, time, function):
         self.time = time
         self.function = function
@@ -84,7 +114,7 @@ class Loop():
             self.function.eval()
 
 
-class Assign():
+class Assign:
     def __init__(self, name, value):
         self.name = name
         self.value = value
@@ -93,12 +123,12 @@ class Assign():
         variables[self.name.getstr()] = self.value.eval()
 
 
-class Variable():
+class Variable:
     def __init__(self, name):
         self.name = name
 
     def eval(self):
-        if variables[self.name.getstr()]:
+        if self.name.getstr() in variables.keys():
             return variables[self.name.getstr()]
         else:
             raise RuntimeError("Not Declared:", self.name)
