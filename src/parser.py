@@ -12,7 +12,7 @@ class Parser:
              'MUL', 'MOD', '(', ')', ',',
              'LOOP', 'BOOLEAN', 'IDENTIFIER',
              '=', '+=', '-=', '{', '}', 'IF',
-             'ELSE'
+             'ELSE', 'READ'
             ],
             precedence=[
                 ('left', ['INTEGER', 'FLOAT']),
@@ -30,6 +30,10 @@ class Parser:
         @self.pg.production('statement : PRINT ( expression )')
         def exp_print(p):
             return Print(p[2])
+
+        @self.pg.production('expression : READ ( expression )')
+        def reading(p):
+            return Read(p[2])
 
         @self.pg.production('statement : LOOP ( expression ) block')
         def loop(p):

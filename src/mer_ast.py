@@ -41,7 +41,7 @@ class String:
         self.value = value.getstr()
 
     def eval(self):
-        return str(self.value)
+        return str(self.value[1:-1])
 
 class Null:
     def eval(self):
@@ -91,6 +91,18 @@ class Print:
     def eval(self):
         print(self.value.eval())
 
+class Read:
+    def __init__(self, question):
+        self.question = question
+
+    def eval(self):
+        value = input(self.question.eval())
+        if value.isnumeric():
+            if '.' not in value:
+                return Integer(value)
+            else:
+                return Float(value)
+        return value
 
 class Loop:
     def __init__(self, time, function):

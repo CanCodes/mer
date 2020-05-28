@@ -12,3 +12,6 @@ doğru ise {
     yazdır('yanlış')
 }
 
+b = oku('Selam adın nedir?')
+
+yazdır('Merhaba, ' + b)
