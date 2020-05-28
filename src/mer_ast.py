@@ -11,18 +11,18 @@ class Statements:
 
 class Boolean:
     def __init__(self, value):
-        self.value = value.getstr()
+        self.value = value
 
     def eval(self):
-        if (self.value == "doğru"):
-            return True
-        elif (self.value == "yanlış"):
-            return False
+        if (self.value):
+            return "doğru"
+        else:
+            return "yalnış"
 
 
 class Integer:
     def __init__(self, value):
-        self.value = value.getstr()
+        self.value = value
 
     def eval(self):
         return int(self.value)
@@ -30,7 +30,7 @@ class Integer:
 
 class Float:
     def __init__(self, value):
-        self.value = value.getstr()
+        self.value = value
 
     def eval(self):
         return float(self.value)
@@ -38,7 +38,7 @@ class Float:
 
 class String:
     def __init__(self, value):
-        self.value = value.getstr()
+        self.value = value
 
     def eval(self):
         return str(self.value[1:-1])
@@ -67,6 +67,10 @@ class BinOp:
             return self.left.eval() / self.right.eval()
         elif self.binop == "MOD":
             return self.left.eval() % self.right.eval()
+        elif self.binop == "==":
+            return Boolean(self.left.eval() == self.right.eval())
+        elif self.binop == "!=":
+            return Boolean(self.left.eval() != self.right.eval())
         else:
             raise AssertionError("Something went super wrong.")
 
@@ -120,7 +124,7 @@ class Assign:
         self.value = value
 
     def eval(self):
-        variables[self.name.getstr()] = self.value.eval()
+        variables[self.name] = self.value.eval()
 
 
 class Variable:
@@ -128,7 +132,7 @@ class Variable:
         self.name = name
 
     def eval(self):
-        if self.name.getstr() in variables.keys():
-            return variables[self.name.getstr()]
+        if self.name in variables.keys():
+            return variables[self.name]
         else:
             raise RuntimeError("Not Declared:", self.name)

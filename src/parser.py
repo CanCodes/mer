@@ -12,10 +12,11 @@ class Parser:
              'MUL', 'MOD', '(', ')', ',',
              'LOOP', 'BOOLEAN', 'IDENTIFIER',
              '=', '+=', '-=', '{', '}', 'IF',
-             'ELSE', 'READ'
+             'ELSE', 'READ', 'EQUALS', 'NOT_EQUALS'
             ],
             precedence=[
                 ('left', ['INTEGER', 'FLOAT']),
+                ('left', ["==", "="]),
                 ('left', ['ADD', 'SUB']),
                 ('left', ['MUL', 'DIV'])
             ]
@@ -39,17 +40,25 @@ class Parser:
         def loop(p):
             return Loop(p[2], p[4])
 
+        @self.pg.production('statement : expression EQUALS expression')
+        def equals(p):
+            return BinOp(p[0], "==", p[2])
+
+        @self.pg.production('statement : expression NOT_EQUALS expression')
+        def not_equals(p):
+            return BinOp(p[0], "!=", p[2])
+
         @self.pg.production('statement : IDENTIFIER = expression')
         def variable(p):
-            return Assign(p[0], p[2])
+            return Assign(p[0].getstr(), p[2])
 
         @self.pg.production('statement : IDENTIFIER += expression')
         def plus_equals(p):
-            return Assign(p[0], BinOp(Variable(p[0]), "ADD", p[2]))
+            return Assign(p[0].getstr(), BinOp(Variable(p[0].getstr()), "ADD", p[2]))
 
         @self.pg.production('statement : IDENTIFIER -= expression')
-        def plus_equals(p):
-            return Assign(p[0], BinOp(Variable(p[0]), "SUB", p[2]))
+        def minus_equals(p):
+            return Assign(p[0].getstr(), BinOp(Variable(p[0].getstr()), "SUB", p[2]))
 
         @self.pg.production('block : { statements }')
         @self.pg.production('block : { }')
@@ -84,23 +93,26 @@ class Parser:
 
         @self.pg.production('expression : INTEGER')
         def exp_number(p):
-            return Integer(p[0])
+            return Integer(p[0].getstr())
         
         @self.pg.production('expression : FLOAT')
         def exp_float(p):
-            return Float(p[0])
+            return Float(p[0].getstr())
         
         @self.pg.production('expression : STRING')
         def exp_string(p):
-            return String(p[0])
+            return String(p[0].getstr())
 
         @self.pg.production('expression : BOOLEAN')
         def exp_boolean(p):
-            return Boolean(p[0])
+            if p[0].getstr() == "doğru":
+                return Boolean(True)
+            else:
+                return Boolean(False)
 
         @self.pg.production('expression : IDENTIFIER')
         def call(p):
-            return Variable(p[0])
+            return Variable(p[0].getstr())
         
         @self.pg.error
         def error_handler(token):

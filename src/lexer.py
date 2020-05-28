@@ -16,6 +16,8 @@ class Lexer:
         self.lg.add("ELSE", r"değil")
 
         self.lg.add("=", r"=")
+        self.lg.add("EQUALS", r"==")
+        self.lg.add("NOT_EQUALS", r"!=")
         self.lg.add("+=", r"\+=")
         self.lg.add("-=", r"\-=")
 
