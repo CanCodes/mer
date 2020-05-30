@@ -43,9 +43,11 @@ class String:
     def eval(self):
         return str(self.value[1:-1])
 
+
 class Null:
     def eval(self):
         return self
+
     def getstr(self):
         return 'yok'
 
@@ -82,6 +84,7 @@ class BinOp:
         else:
             raise AssertionError("Something went super wrong.")
 
+
 class If:
     def __init__(self, condition, body, else_body=None):
         self.condition = condition
@@ -89,7 +92,7 @@ class If:
         self.else_body = else_body
 
     def eval(self):
-        if self.condition.eval():
+        if self.condition.eval() == "doğru":
             return self.body.eval()
         elif self.else_body is not None:
             return self.else_body.eval()
@@ -103,6 +106,7 @@ class Print:
     def eval(self):
         print(self.value.eval())
 
+
 class Read:
     def __init__(self, question):
         self.question = question
@@ -115,6 +119,7 @@ class Read:
             else:
                 return float(value)
         return str(value)
+
 
 class Loop:
     def __init__(self, time, function):
