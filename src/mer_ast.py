@@ -4,7 +4,7 @@ variables = {}
 class Statements:
     def __init__(self, nodes):
         self.nodes = nodes
-    
+
     def eval(self):
         for node in self.nodes:
             node.eval()
@@ -17,7 +17,7 @@ class Boolean:
         if (self.value):
             return "doğru"
         else:
-            return "yalnış"
+            return "yanlış"
 
 
 class Integer:
@@ -68,9 +68,17 @@ class BinOp:
         elif self.binop == "MOD":
             return self.left.eval() % self.right.eval()
         elif self.binop == "==":
-            return Boolean(self.left.eval() == self.right.eval())
+            return Boolean(self.left.eval() == self.right.eval()).eval()
         elif self.binop == "!=":
-            return Boolean(self.left.eval() != self.right.eval())
+            return Boolean(self.left.eval() != self.right.eval()).eval()
+        elif self.binop == ">":
+            return Boolean(self.left.eval() > self.right.eval()).eval()
+        elif self.binop == "<":
+            return Boolean(self.left.eval() < self.right.eval()).eval()
+        elif self.binop == ">=":
+            return Boolean(self.left.eval() >= self.right.eval()).eval()
+        elif self.binop == "<=":
+            return Boolean(self.left.eval() <= self.right.eval()).eval()
         else:
             raise AssertionError("Something went super wrong.")
 
@@ -103,10 +111,10 @@ class Read:
         value = input(self.question.eval())
         if value.isnumeric():
             if '.' not in value:
-                return Integer(value)
+                return int(value)
             else:
-                return Float(value)
-        return value
+                return float(value)
+        return str(value)
 
 class Loop:
     def __init__(self, time, function):
