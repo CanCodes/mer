@@ -19,7 +19,7 @@ class Parser:
             precedence=[
                 ('left', ['INTEGER', 'FLOAT']),
                 ("left", ["IF", "LOOP", "ELSE"]),
-                ('left', ["==", "="]),
+                ('left', ["<=", ">=", "==", "="]),
                 ('left', ['ADD', 'SUB']),
                 ('left', ['MUL', 'DIV'])
             ]
