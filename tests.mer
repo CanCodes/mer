@@ -1,13 +1,13 @@
 a = 0
-
+b = 10
 tekrar(10) {
     a+=1
     yazdır(a)
 }
 // Output: 10
 
-doğru ise {
-    yazdır('doğru')
+b > 10 ise {
+    yazdır(doğru)
 } değil {
-    yazdır('yanlış')
+    yazdır(yanlış)
 }

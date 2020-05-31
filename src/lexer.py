@@ -15,6 +15,10 @@ class Lexer:
         self.lg.add("IF", r"ise")
         self.lg.add("ELSE", r"değil")
 
+        self.lg.add(">", ">")
+        self.lg.add("<", "<")
+        self.lg.add("<=", "<=")
+        self.lg.add(">=", ">=")
         self.lg.add("==", r"==")
         self.lg.add("!=", r"!=")
         self.lg.add("+=", r"\+=")
