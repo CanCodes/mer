@@ -4,25 +4,25 @@ variables = {}
 class Statements:
     def __init__(self, nodes):
         self.nodes = nodes
-    
+
     def eval(self):
         for node in self.nodes:
             node.eval()
 
 class Boolean:
     def __init__(self, value):
-        self.value = value.getstr()
+        self.value = value
 
     def eval(self):
-        if (self.value == "doğru"):
-            return True
-        elif (self.value == "yanlış"):
-            return False
+        if (self.value):
+            return "doğru"
+        else:
+            return "yanlış"
 
 
 class Integer:
     def __init__(self, value):
-        self.value = value.getstr()
+        self.value = value
 
     def eval(self):
         return int(self.value)
@@ -30,7 +30,7 @@ class Integer:
 
 class Float:
     def __init__(self, value):
-        self.value = value.getstr()
+        self.value = value
 
     def eval(self):
         return float(self.value)
@@ -38,14 +38,16 @@ class Float:
 
 class String:
     def __init__(self, value):
-        self.value = value.getstr()
+        self.value = value
 
     def eval(self):
         return str(self.value[1:-1])
 
+
 class Null:
     def eval(self):
         return self
+
     def getstr(self):
         return 'yok'
 
@@ -67,8 +69,21 @@ class BinOp:
             return self.left.eval() / self.right.eval()
         elif self.binop == "MOD":
             return self.left.eval() % self.right.eval()
+        elif self.binop == "==":
+            return Boolean(self.left.eval() == self.right.eval()).eval()
+        elif self.binop == "!=":
+            return Boolean(self.left.eval() != self.right.eval()).eval()
+        elif self.binop == ">":
+            return Boolean(self.left.eval() > self.right.eval()).eval()
+        elif self.binop == "<":
+            return Boolean(self.left.eval() < self.right.eval()).eval()
+        elif self.binop == ">=":
+            return Boolean(self.left.eval() >= self.right.eval()).eval()
+        elif self.binop == "<=":
+            return Boolean(self.left.eval() <= self.right.eval()).eval()
         else:
             raise AssertionError("Something went super wrong.")
+
 
 class If:
     def __init__(self, condition, body, else_body=None):
@@ -77,7 +92,7 @@ class If:
         self.else_body = else_body
 
     def eval(self):
-        if self.condition.eval():
+        if self.condition.eval() == "doğru":
             return self.body.eval()
         elif self.else_body is not None:
             return self.else_body.eval()
@@ -91,6 +106,7 @@ class Print:
     def eval(self):
         print(self.value.eval())
 
+
 class Read:
     def __init__(self, question):
         self.question = question
@@ -99,10 +115,11 @@ class Read:
         value = input(self.question.eval())
         if value.isnumeric():
             if '.' not in value:
-                return Integer(value)
+                return int(value)
             else:
-                return Float(value)
-        return value
+                return float(value)
+        return str(value)
+
 
 class Loop:
     def __init__(self, time, function):
@@ -120,7 +137,7 @@ class Assign:
         self.value = value
 
     def eval(self):
-        variables[self.name.getstr()] = self.value.eval()
+        variables[self.name] = self.value.eval()
 
 
 class Variable:
@@ -128,7 +145,7 @@ class Variable:
         self.name = name
 
     def eval(self):
-        if self.name.getstr() in variables.keys():
-            return variables[self.name.getstr()]
+        if self.name in variables.keys():
+            return variables[self.name]
         else:
             raise RuntimeError("Not Declared:", self.name)

@@ -15,9 +15,15 @@ class Lexer:
         self.lg.add("IF", r"ise")
         self.lg.add("ELSE", r"değil")
 
-        self.lg.add("=", r"=")
+        self.lg.add("==", r"==")
+        self.lg.add("!=", r"!=")
+        self.lg.add("<=", r"<=")
+        self.lg.add(">=", r">=")
+        self.lg.add(">", r">")
+        self.lg.add("<", r"<")
         self.lg.add("+=", r"\+=")
         self.lg.add("-=", r"\-=")
+        self.lg.add("=", r"=")
 
         self.lg.add("STRING", r"'.*'")
         self.lg.add("FLOAT",  r"\d+(\.\d+)") #r"[-]?\d+(\.\d+)"

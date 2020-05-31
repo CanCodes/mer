@@ -13,5 +13,6 @@ ama ciddi bir hata varsa `Issues` kısmında bildirebilirsiniz.
 - [X] Yazdırma ve Okuma
 - [X] Basit Döngü
 - [X] Eğer
-- [ ] Mantıksal İşlemler
+- [X] Mantıksal İşlemler
 - [ ] Fonksiyonlar
+- [ ] Eksili Sayılar
