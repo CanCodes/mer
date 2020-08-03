@@ -26,8 +26,8 @@ class Lexer:
         self.lg.add("=", r"=")
 
         self.lg.add("STRING", r"'.*'")
-        self.lg.add("FLOAT",  r"\d+(\.\d+)") #r"[-]?\d+(\.\d+)"
-        self.lg.add("INTEGER", r"\d+") # [-]?\d+
+        self.lg.add("FLOAT",  r"[-]?\d+(\.\d+)")
+        self.lg.add("INTEGER", r"[-]?\d+")
         self.lg.add("BOOLEAN", r"(doğru|yanlış)")
         self.lg.add("ADD", r"\+")
         self.lg.add("SUB", r"-")

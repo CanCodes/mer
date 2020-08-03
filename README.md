@@ -15,4 +15,4 @@ ama ciddi bir hata varsa `Issues` kısmında bildirebilirsiniz.
 - [X] Eğer
 - [X] Mantıksal İşlemler
 - [ ] Fonksiyonlar
-- [ ] Eksili Sayılar
+- [X] Eksili Sayılar
